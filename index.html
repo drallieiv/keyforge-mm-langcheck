@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Lang Checker</title>
+    <style media="screen">
+      table, th, td {border: 1px solid black;border-spacing: 0;border-collapse: collapse;padding: 3px;}
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr><th>#</th><th>EN name</th><th>EN text</th><th>EN image</th><th>TR image</th></tr>
+      </thead>
+      <tbody id="tableBody">
+
+      </tbody>
+    </table>
+    <template id="cardTemplate">
+      <tr>
+        <td></td>
+        <td class="nameEn"></td>
+        <td class="text"></td>
+        <td class="imgEn"></td>
+        <td class="imgTr"></td>
+      </tr>
+    </template>
+
+    <script src="479Cards.js"></script>
+    <script>
+      var lang = 'fr';
+      var template = document.querySelector("#cardTemplate");
+      var main = document.querySelector("#tableBody");
+
+      var lastNumber = null;
+
+      function img_create(src) {
+        var img = document.createElement('img');
+        img.src = src;
+        return img;
+      }
+
+      console.log("Show diff for " + cards.length + " cards in "+ lang);
+
+      cards.forEach((card, i) => {
+        if(lastNumber != card.card_number) {
+          lastNumber = card.card_number;
+          var newLine = document.importNode(template.content, true);
+          var cells = newLine.querySelectorAll("td");
+          cells[0].textContent = card.card_number;
+          cells[1].textContent = card.card_title;
+          cells[2].textContent = card.card_text;
+
+          var enImage = card.front_image;
+          var trImage = card.front_image.replace("/en/", "/"+lang+"/").replace("_en.", "_"+lang+".");
+          cells[3].appendChild(img_create(enImage));
+          cells[4].appendChild(img_create(trImage));
+
+          main.appendChild(newLine);
+        }
+      });
+    </script>
+  </body>
+</html>
